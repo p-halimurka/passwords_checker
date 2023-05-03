@@ -14,7 +14,7 @@ class PasswordsChecker
       parse_character_count_condition
       count_valid_passwords
     else
-      'Please input path to valid file'
+      'Please input path to valid file / add password conditions to it'
     end
   end
 
