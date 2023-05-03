@@ -29,20 +29,21 @@ class PasswordsChecker
   def parse_character_count_condition
     @character_count = {}
     @character_condition = {}
-    @file_lines.each do |line|
+    @file_lines.each.with_index do |line, index|
       line_parts = line.split(LINE_PARTS_DELINEATOR)
-      character = line_parts.first
+      character_key = "#{line_parts.first}_#{index}"
       count_range_points = line_parts[1].gsub(RANGE_PART_REDUNDANT_CHARACTER, '').split(RANGE_DELINEATOR).map(&:to_i)
       count_range = count_range_points.first..count_range_points.last
-      @character_count[character] = count_range
-      @character_condition[character] = line_parts.last if line_parts.size == 3
+      @character_count[character_key] = count_range
+      @character_condition[character_key] = line_parts.last
     end
   end
 
   def count_valid_passwords
     result = 0
-    @character_count.each do |character, count_range|
-      number_of_characters = @character_condition[character].count(character)
+    @character_count.each do |character_key, count_range|
+      character = character_key.split('_').first
+      number_of_characters = @character_condition[character_key].count(character)
       result += 1 if count_range.cover?(number_of_characters)
     end
     "#{result} valid passwords in given file"
